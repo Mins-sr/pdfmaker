@@ -31,3 +31,21 @@ npm install
 - アップロードした PDF の内容を解析してレイアウトを調整することはできません。
 - 複数ファイルの同時アップロードや細かなレイアウト変更など、高度な PDF 処理は行えません。
 
+
+## AWS Lambda で公開する方法
+AWS アカウントを作成済みであることを前提に、Express アプリを Lambda 上で動かす手順を示します。
+
+1. 必要なモジュールを追加します。
+   ```bash
+   npm install serverless-http
+   ```
+2. `server.js` の Express アプリをモジュール化し、Lambda 用のハンドラーを作成します。例として `lambda.js` を以下のように用意します。
+   ```javascript
+   const serverless = require('serverless-http');
+   const app = require('./server');
+   module.exports.handler = serverless(app);
+   ```
+3. すべてのファイルと `node_modules` を含めて zip 圧縮し、Lambda 関数としてアップロードします。
+4. AWS コンソールで Node.js 16 以降のランタイムを選び、ハンドラーに `lambda.handler` を指定します。
+5. API Gateway で HTTP API を作成し、この Lambda 関数を統合します。デプロイ後に発行される URL からアプリを利用できます。
+
